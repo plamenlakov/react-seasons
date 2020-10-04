@@ -8,28 +8,28 @@ class App extends React.Component {
 
         //state initialization
         this.state = { lat: null, errorMessage: '' };
+    } 
 
+    componentDidMount() {
         //call geolocation api and set lat state
         window.navigator.geolocation.getCurrentPosition(
-            position => {
-                //use setstate to update state
-                this.setState({ lat: position.coords.latitude })
-            },
-            err => {
-                this.setState({ errorMessage: err.message })
-            }
+            position => this.setState({ lat: position.coords.latitude }),
+            err => this.setState({ errorMessage: err.message })
         );
     }
 
     render() {
-        return (
-            <div>
-                Latitude: {this.state.lat}
-                <br />
-                Error: {this.state.errorMessage}
-            </div>
-        );
+        if(this.state.errorMessage && !this.state.lat) {
+            return <div>Error: { this.state.errorMessage }</div>;
+        }
+
+        if(!this.state.errorMessage && this.state.lat) {
+            return <div>Latitude: { this.state.lat }</div>;
+        }
+
+        return <div>Loading!</div>;
     }
+
 }
 
 ReactDOM.render(<App/>, document.querySelector('#root'));
